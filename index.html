@@ -30,7 +30,7 @@
 		function initMap() {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(position => {
-					const userLocation = {
+					userLocation = {
 						lat: position.coords.latitude,
 						lng: position.coords.longitude
 					};
@@ -43,7 +43,15 @@
 					new google.maps.Marker({
 						position: userLocation,
 						map: map,
-						title: "You are here"
+						title: "You are here",
+						icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+					});
+
+					// Initialize directions services
+					directionsService = new google.maps.DirectionsService();
+					directionsRenderer = new google.maps.DirectionsRenderer({
+						map: map,
+						suppressMarkers: true
 					});
 
 					// POIs
@@ -51,7 +59,7 @@
 						{
 							position: { lat: 40.1792, lng: 44.4991 },
 							title: "Republic Square",
-							image: "https://lh3.googleusercontent.com/p/AF1QipNEyFi1f9SImBAahsSjfCK7_HnWCu6Tk5O3wdPn=s1360-w1360-h1020",
+							image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Republic_Square_Yerevan_2022.jpg/800px-Republic_Square_Yerevan_2022.jpg",
 							description: "Central square in Yerevan, famous for its fountains and architecture."
 						},
 						{
@@ -62,7 +70,7 @@
 						}
 					];
 
-					// Add POIs to map
+					// Add POIs and directions logic
 					pois.forEach(poi => {
 						const marker = new google.maps.Marker({
 							position: poi.position,
@@ -70,21 +78,39 @@
 							title: poi.title
 						});
 
-						const content = `
-							<div class="info-window">
-								<h3>${poi.title}</h3>
-								<img src="${poi.image}" alt="${poi.title}" />
-								<p>${poi.description}</p>
-							</div>
-						`;
-
-						const infoWindow = new google.maps.InfoWindow({ content });
+						const infoWindow = new google.maps.InfoWindow({
+							content: `
+								<div class="info-window">
+									<h3>${poi.title}</h3>
+									<img src="${poi.image}" alt="${poi.title}" />
+									<p>${poi.description}</p>
+									<p><strong>Click marker to show route</strong></p>
+								</div>
+							`
+						});
 
 						marker.addListener("click", () => {
 							infoWindow.open(map, marker);
+							showRouteTo(poi.position);
 						});
 					});
 
+					// Route function
+					function showRouteTo(destination) {
+						const request = {
+							origin: userLocation,
+							destination: destination,
+							travelMode: google.maps.TravelMode.WALKING // or DRIVING
+						};
+
+						directionsService.route(request, (result, status) => {
+							if (status === "OK") {
+								directionsRenderer.setDirections(result);
+							} else {
+								alert("Directions request failed: " + status);
+							}
+						});
+					}
 				}, error => {
 					alert("Geolocation failed: " + error.message);
 				});
