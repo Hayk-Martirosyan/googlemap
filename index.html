@@ -24,9 +24,31 @@
         <div id="map">Loading map...</div>
 
         <script>
+		let currentAudio = null;
+
 		function playAudio(url) {
-			const audio = new Audio(url);
-			audio.play();
+			// If audio is already playing, stop it
+			if (currentAudio) {
+				currentAudio.pause();
+				currentAudio.currentTime = 0; // reset to start
+			}
+	
+			// Create and play new audio
+			currentAudio = new Audio(url);
+			currentAudio.play();
+		}
+	
+		function pauseAudio() {
+			if (currentAudio) {
+				currentAudio.pause();
+			}
+		}
+	
+		function stopAudio() {
+			if (currentAudio) {
+				currentAudio.pause();
+				currentAudio.currentTime = 0;
+			}
 		}
 		const tg = window.Telegram.WebApp;
 		tg.expand();
@@ -92,6 +114,8 @@
 									<p>${poi.description}</p>
 									<p><strong>Click marker to show route</strong></p>
 	 								<button onclick="playAudio('${poi.audio}')">▶️ Play Audio</button>
+									<button onclick="pauseAudio()">⏸️ Pause</button>
+									<button onclick="stopAudio()">⏹️ Stop</button>
 								</div>
 							`
 						});
