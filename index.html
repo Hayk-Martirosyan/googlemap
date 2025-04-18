@@ -24,6 +24,10 @@
         <div id="map">Loading map...</div>
 
         <script>
+		function playAudio(url) {
+			const audio = new Audio(url);
+			audio.play();
+		}
 		const tg = window.Telegram.WebApp;
 		tg.expand();
 
@@ -59,14 +63,16 @@
 						{
 							position: { lat: 40.1792, lng: 44.4991 },
 							title: "Republic Square",
-							image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Republic_Square_Yerevan_2022.jpg/800px-Republic_Square_Yerevan_2022.jpg",
-							description: "Central square in Yerevan, famous for its fountains and architecture."
+							image: "https://lh3.googleusercontent.com/p/AF1QipNEyFi1f9SImBAahsSjfCK7_HnWCu6Tk5O3wdPn=s1360-w1360-h1020",
+							description: "Central square in Yerevan, famous for its fountains and architecture.",
+							audio: "https://onlinetestcase.com/wp-content/uploads/2023/06/100-KB-MP3.mp3"
 						},
 						{
 							position: { lat: 40.1858, lng: 44.5126 },
 							title: "Cascade Complex",
-							image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Cascade_Yerevan_2022.jpg/800px-Cascade_Yerevan_2022.jpg",
-							description: "Giant stairway and open-air museum connecting downtown Yerevan to the Monument neighborhood."
+							image: "https://lh3.googleusercontent.com/p/AF1QipNEyFi1f9SImBAahsSjfCK7_HnWCu6Tk5O3wdPn=s1360-w1360-h1020",
+							description: "Giant stairway and open-air museum connecting downtown Yerevan to the Monument neighborhood.",
+							audio: "https://onlinetestcase.com/wp-content/uploads/2023/06/100-KB-MP3.mp3"
 						}
 					];
 
@@ -85,6 +91,7 @@
 									<img src="${poi.image}" alt="${poi.title}" />
 									<p>${poi.description}</p>
 									<p><strong>Click marker to show route</strong></p>
+	 								<button onclick="playAudio('${poi.audio}')">▶️ Play Audio</button>
 								</div>
 							`
 						});
